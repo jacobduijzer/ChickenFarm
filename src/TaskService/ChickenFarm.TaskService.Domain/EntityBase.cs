@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ChickenFarm.Shared
+namespace ChickenFarm.TaskService.Domain
 {
     public class EntityBase
     {

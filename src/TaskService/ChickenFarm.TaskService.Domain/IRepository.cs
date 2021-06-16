@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace ChickenFarm.Shared
+namespace ChickenFarm.TaskService.Domain
 {
     public interface IRepository<TEntity> where TEntity : EntityBase
     {

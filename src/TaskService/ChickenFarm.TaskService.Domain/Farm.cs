@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ChickenFarm.Shared
+namespace ChickenFarm.TaskService.Domain
 {
     public class Farm : EntityBase
     {

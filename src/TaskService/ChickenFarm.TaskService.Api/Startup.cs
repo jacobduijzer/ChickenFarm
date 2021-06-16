@@ -1,55 +1,58 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Reflection;
+using ChickenFarm.TaskService.Application;
+using ChickenFarm.TaskService.Domain;
+using ChickenFarm.TaskService.Infrastructure;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace ChickenFarm.TaskService.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        private readonly IConfiguration _configuration;
 
-        public IConfiguration Configuration { get; }
+        public Startup(IConfiguration configuration) =>
+            _configuration = configuration;
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services
+                .AddDbContext<TaskDbContext>(options =>
+                    options.UseNpgsql(_configuration.GetConnectionString("FarmServiceDatabase")))
+                .AddScoped<IRepository<Farm>, FarmRepository>()
+                .AddControllers()
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.AddMediatR(cfg => cfg.AsScoped(), typeof(FarmsQuery).GetTypeInfo().Assembly);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "ChickenFarm.TaskService.Api", Version = "v1"});
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TaskDbContext taskDbContext)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChickenFarm.TaskService.Api v1"));
-            }
 
-            app.UseHttpsRedirection();
+            taskDbContext.Database.EnsureDeleted();
+            taskDbContext.Database.EnsureCreated();
+            taskDbContext.AddTestData();
 
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app
+                .UseSwagger()
+                .UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChickenFarm.TaskService.Api v1"))
+                .UseRouting()
+                .UseAuthorization()
+                .UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

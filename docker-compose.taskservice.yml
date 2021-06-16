@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  chickenfarm-taskservice-api:
+    image: jacobapps/chickenfarm-taskservice-api:dev
+    container_name: chickenfarm-taskservice-api
+    ports:
+      - 82:82
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROJECT_FILE: src/TaskService/ChickenFarm.TaskService.Api/ChickenFarm.TaskService.Api.csproj
+        PROJECT_DLL: ChickenFarm.TaskService.Api.dll
+    environment:
+      ASPNETCORE_URLS: "http://0.0.0.0:82"
+      PATH_BASE: /chickenfarm-taskservice-api
+      DatabaseSettings:Username: postgres
+      DatabaseSettings:Password: postgres
+      DatabaseSettings:Host: chickenfarm-db
+      DatabaseSettings:Database: TaskServiceDatabase
+    depends_on:
+      - chickenfarm-db
+
