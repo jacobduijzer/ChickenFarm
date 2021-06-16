@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  chickenfarm-db:
+    image: library/postgres:11
+    container_name: chickenfarm-db
+    environment:
+      TZ: Europe/Amsterdam
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_MULTIPLE_DATABASES: FarmServiceDatabase, TaskServiceDatabase
+    ports:
+      - 5432:5432
+    volumes:
+      - ../docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
+    restart: always
