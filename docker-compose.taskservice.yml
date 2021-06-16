@@ -5,7 +5,7 @@ services:
     image: jacobapps/chickenfarm-taskservice-api:dev
     container_name: chickenfarm-taskservice-api
     ports:
-      - 82:82
+      - 81:81
     build:
       context: .
       dockerfile: Dockerfile
@@ -13,7 +13,7 @@ services:
         PROJECT_FILE: src/TaskService/ChickenFarm.TaskService.Api/ChickenFarm.TaskService.Api.csproj
         PROJECT_DLL: ChickenFarm.TaskService.Api.dll
     environment:
-      ASPNETCORE_URLS: "http://0.0.0.0:82"
+      ASPNETCORE_URLS: "http://0.0.0.0:81"
       PATH_BASE: /chickenfarm-taskservice-api
       DatabaseSettings:Username: postgres
       DatabaseSettings:Password: postgres
@@ -21,4 +21,18 @@ services:
       DatabaseSettings:Database: TaskServiceDatabase
     depends_on:
       - chickenfarm-db
+
+  chickenfarm-taskservice-api-dapr:
+    image: "daprio/daprd:latest"
+    command: [ "./daprd",
+               "-app-id", "chickenfarm-taskservice-api",
+               "-app-port", "81",
+               "-components-path", "/components",
+               "-config", "/configuration/config.yaml" ]
+    network_mode: "service:chickenfarm-taskservice-api"
+    depends_on:
+      - chickenfarm-taskservice-api
+    volumes:
+      - "./dapr/components/:/components"
+      - "./dapr/configuration/:/configuration"
 

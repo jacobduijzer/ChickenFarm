@@ -1,0 +1,27 @@
+@page "/Tasks"
+@using MediatR
+@using ChickenFarm.FrontEnd.Application
+@using ChickenFarm.Shared
+@using System.Collections.Immutable
+@inject IMediator _mediator
+
+<h1>Tasks</h1>
+
+@if (_tasks != null)
+{
+    <ul>
+        @foreach (var task in _tasks)
+        {
+            <li>Shed: @task.ShedId - Task: @task.TaskId</li>
+        }
+    </ul>
+}
+
+@code {
+    private IReadOnlyList<TaskDto> _tasks;
+    protected override async Task OnInitializedAsync()
+    {
+        var data = await _mediator.Send(new NewTasksQuery.Query(1));
+        _tasks = data.ToImmutableArray();
+    }
+}

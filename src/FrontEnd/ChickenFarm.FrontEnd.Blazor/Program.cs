@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 
-namespace ChickenFarm.TaskService.Api
+namespace ChickenFarm.FrontEnd.Blazor
 {
     public class Program
     {
