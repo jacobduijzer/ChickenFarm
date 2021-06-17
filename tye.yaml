@@ -1,0 +1,69 @@
+name: practical-dapr
+extensions:
+  - name: dapr
+registry: dapracr.azurecr.io
+services:
+  - name: chickenfarm-db
+    image: library/postgres:11
+    env:
+      - name: TZ
+        value: Europe/Amsterdam
+      - name: POSTGRES_USER
+        value: postgres
+      - name: POSTGRES_PASSWORD
+        value: postgres
+      - name: POSTGRES_MULTIPLE_DATABASES
+        value: FarmServiceDatabase, TaskServiceDatabase
+    bindings:
+      - port: 5432
+  - name: chickenfarm-logging
+    image: datalust/seq:latest
+    env:
+      - name: ACCEPT_EULA
+        value: Y
+    bindings:
+      - port: 5340
+        containerPort: 80
+  - name: chickenfarm-rabbitmq
+    image: rabbitmq:3-management-alpine
+    env:
+      - name: RABBITMQ_DEFAULT_USER
+        value: root
+      - name: RABBITMQ_DEFAULT_PASS
+        value: root
+    bindings:
+      - port: 5672
+  - name: chickenfarm-zipkin
+    image: openzipkin/zipkin-slim
+    bindings:
+      - port: 5411
+        containerPort: 9411
+  - name: chickenfarm-frontend-blazor
+    project: src/FrontEnd/ChickenFarm.FrontEnd.Blazor/ChickenFarm.FrontEnd.Blazor.csproj
+    bindings:
+      - port: 5000
+    env:
+      - name: ASPNETCORE_URLS
+        value: "http://0.0.0.0:5000"
+      - name: PATH_BASE
+        value: /chickenfarm-frontend
+
+  - name: chickenfarm-taskservice-api
+    project: src/TaskService/ChickenFarm.TaskService.Api/ChickenFarm.TaskService.Api.csproj
+    env:
+      - name: ASPNETCORE_URLS
+        value : "http://0.0.0.0:5001"
+      - name: PATH_BASE
+        value: /chickenfarm-taskservice-api
+      - name: DatabaseSettings:Username
+        value: postgres
+      - name: DatabaseSettings:Password
+        value: postgres
+      - name: DatabaseSettings:Host
+        value: chickenfarm-db
+      - name: DatabaseSettings:Database
+        value: TaskServiceDatabase
+    bindings:
+      - port: 5001
+        containerPort: 5001
+

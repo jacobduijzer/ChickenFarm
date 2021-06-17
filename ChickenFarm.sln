@@ -21,6 +21,8 @@ ProjectSection(SolutionItems) = preProject
 	dapr\configuration\config.yaml = dapr\configuration\config.yaml
 	docker-compose.tools.yml = docker-compose.tools.yml
 	docker-compose.frontend.yml = docker-compose.frontend.yml
+	tye.yaml = tye.yaml
+	README.md = README.md
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChickenFarm.TaskService.Application", "src\TaskService\ChickenFarm.TaskService.Application\ChickenFarm.TaskService.Application.csproj", "{79ACD993-F9B6-4935-8188-571C05C2EEE3}"
