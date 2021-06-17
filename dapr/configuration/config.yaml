@@ -7,4 +7,4 @@ spec:
   tracing:
     samplingRate: "1"
     zipkin:
-      endpointAddress: "http://chickenfarm-zipkin:9411/api/v2/spans"
+      endpointAddress: "http://localhost:9411/api/v2/spans"

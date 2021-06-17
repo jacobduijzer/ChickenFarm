@@ -1,5 +1,10 @@
 # ChickenFarm
 
+tye run
+tye run --debug # attach IDE to docker
+tye run --watch # watch project changes
+
+tye dashboard: localhost:8000
 
 # Remote debugging 
 

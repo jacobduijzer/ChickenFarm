@@ -57,7 +57,7 @@ namespace ChickenFarm.FrontEnd.Blazor
             }
 
             app
-                .UseSerilogRequestLogging()
+                // .UseSerilogRequestLogging()
                 .UseStaticFiles()
                 .UseRouting()
                 .UseEndpoints(endpoints =>
