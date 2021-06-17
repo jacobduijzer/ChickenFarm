@@ -9,19 +9,27 @@
 
 @if (_tasks != null)
 {
+    <p>There are new tasks for sheds:</p>
     <ul>
         @foreach (var task in _tasks)
         {
-            <li>Shed: @task.ShedId - Task: @task.TaskId</li>
+            <li>There is a new task for shed: @task.Id</li>
         }
     </ul>
 }
 
 @code {
-    private IReadOnlyList<TaskDto> _tasks;
+    private IReadOnlyList<ShedDto> _tasks;
     protected override async Task OnInitializedAsync()
     {
-        var data = await _mediator.Send(new NewTasksQuery.Query(1));
-        _tasks = data.ToImmutableArray();
+        try
+        {
+            var data = await _mediator.Send(new NewTasksQuery.Query(1));
+            _tasks = data.ToImmutableArray();
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 }

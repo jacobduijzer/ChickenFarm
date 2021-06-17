@@ -26,7 +26,7 @@ namespace ChickenFarm.TaskService.Api
         {
             services
                 .AddDbContext<TaskDbContext>(options =>
-                    options.UseNpgsql(_configuration.GetConnectionString("FarmServiceDatabase")))
+                    options.UseNpgsql(_configuration.GetConnectionString("chickenfarm-db")))
                 .AddScoped<IRepository<Farm>, FarmRepository>()
                 .AddControllers()
                 .AddDapr()

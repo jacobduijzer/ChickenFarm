@@ -6,6 +6,6 @@ namespace ChickenFarm.FrontEnd.Domain
 {
     public interface ITasksService
     {
-        Task<IEnumerable<TaskDto>> GetTasks(int farmId);
+        Task<IEnumerable<ShedDto>> GetTasks(int farmId);
     }
 }

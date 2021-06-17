@@ -16,13 +16,17 @@ services:
         value: FarmServiceDatabase, TaskServiceDatabase
     bindings:
       - port: 5432
+        containerPort: 5432
+        connectionString: Server=${host};Port=${port};User Id=postgres;Password=${env:POSTGRES_PASSWORD};Database=FarmServiceDatabase;Pooling=true;
   - name: chickenfarm-logging
     image: datalust/seq:latest
     env:
       - name: ACCEPT_EULA
         value: Y
     bindings:
-      - port: 5340
+      - name: ui
+        port: 5341
+        protocol: http
         containerPort: 80
   - name: chickenfarm-rabbitmq
     image: rabbitmq:3-management-alpine
@@ -32,12 +36,24 @@ services:
       - name: RABBITMQ_DEFAULT_PASS
         value: root
     bindings:
-      - port: 5672
+      - name: http
+        protocol: http
+        port: 15672
+        containerPort: 15672
+      - name: amqp
+        protocol: amqp
+        port: 5672
   - name: chickenfarm-zipkin
     image: openzipkin/zipkin-slim
     bindings:
-      - port: 5411
+      - name: http
+        protocol: http
+        port: 9411
         containerPort: 9411
+      - name: tcp
+        protocol: tcp
+        port: 5411
+        containerPort: 5411
   - name: chickenfarm-frontend-blazor
     project: src/FrontEnd/ChickenFarm.FrontEnd.Blazor/ChickenFarm.FrontEnd.Blazor.csproj
     bindings:
@@ -55,15 +71,6 @@ services:
         value : "http://0.0.0.0:5001"
       - name: PATH_BASE
         value: /chickenfarm-taskservice-api
-      - name: DatabaseSettings:Username
-        value: postgres
-      - name: DatabaseSettings:Password
-        value: postgres
-      - name: DatabaseSettings:Host
-        value: chickenfarm-db
-      - name: DatabaseSettings:Database
-        value: TaskServiceDatabase
     bindings:
       - port: 5001
         containerPort: 5001
-
