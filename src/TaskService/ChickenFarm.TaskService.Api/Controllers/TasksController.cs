@@ -1,6 +1,9 @@
 using System;
 using System.Threading.Tasks;
+using ChickenFarm.Shared;
 using ChickenFarm.TaskService.Application;
+using Dapr;
+using Dapr.Client;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -33,6 +36,14 @@ namespace ChickenFarm.TaskService.Api.Controllers
                 _logger.LogError(exception, exception.Message);
                 return new BadRequestObjectResult(exception.Message);
             }
+        }
+
+        [Topic("pubsub", "tasks")]
+        [HttpPost("NewTaskPublished")]
+        public async Task<IActionResult> Add(TaskDto task, [FromServices] DaprClient daprClient)
+        {
+            _logger.LogInformation($"TASKAPI: NEW TASK!: {task.ShedId}");
+            return new OkObjectResult(task.ShedId);
         }
     }
 }

@@ -1,10 +1,12 @@
 name: practical-dapr
 extensions:
   - name: dapr
+    components-path: "./dapr/components/"
   - name: zipkin
   - name: seq
     logPath: ./.logs
 registry: dapracr.azurecr.io
+
 services:
   - name: chickenfarm-db
     image: library/postgres:11
@@ -21,6 +23,7 @@ services:
       - port: 5432
         containerPort: 5432
         connectionString: Server=${host};Port=${port};User Id=postgres;Password=${env:POSTGRES_PASSWORD};Database=FarmServiceDatabase;Pooling=true;
+
   - name: chickenfarm-rabbitmq
     image: rabbitmq:3-management-alpine
     env:
@@ -36,6 +39,7 @@ services:
       - name: amqp
         protocol: amqp
         port: 5672
+
   - name: chickenfarm-frontend-blazor
     project: src/FrontEnd/ChickenFarm.FrontEnd.Blazor/ChickenFarm.FrontEnd.Blazor.csproj
     bindings:

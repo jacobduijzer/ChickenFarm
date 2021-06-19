@@ -25,8 +25,7 @@ namespace ChickenFarm.TaskService.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddDbContext<TaskDbContext>(options =>
-                    options.UseNpgsql(_configuration.GetConnectionString("chickenfarm-db")))
+                .AddDbContext<TaskDbContext>(options => options.UseNpgsql(_configuration.GetConnectionString("chickenfarm-db")))
                 .AddScoped<IRepository<Farm>, FarmRepository>()
                 .AddControllers()
                 .AddDapr()
@@ -62,8 +61,13 @@ namespace ChickenFarm.TaskService.Api
                 .UseSwagger()
                 .UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChickenFarm.TaskService.Api v1"))
                 .UseRouting()
+                .UseCloudEvents()
                 .UseAuthorization()
-                .UseEndpoints(endpoints => { endpoints.MapControllers(); });
+                .UseEndpoints(endpoints =>
+                {
+                    endpoints.MapSubscribeHandler();
+                    endpoints.MapControllers();
+                });
         }
     }
 }
