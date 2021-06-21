@@ -57,7 +57,7 @@ namespace ChickenFarm.TaskService.Api
             taskDbContext.AddTestData();
 
             app
-                .UseSerilogRequestLogging()
+                // .UseSerilogRequestLogging()
                 .UseSwagger()
                 .UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChickenFarm.TaskService.Api v1"))
                 .UseRouting()

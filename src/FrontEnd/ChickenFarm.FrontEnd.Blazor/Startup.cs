@@ -36,7 +36,8 @@ namespace ChickenFarm.FrontEnd.Blazor
             services.AddMediatR(cfg => cfg.AsScoped(), typeof(NewTasksQuery).GetTypeInfo().Assembly);
 
             services.AddSingleton<WeatherForecastService>()
-                .AddSingleton<ITasksService, TasksService>();
+                .AddSingleton<ITasksService, TasksService>()
+                .AddSingleton<IMessageService, MessageService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

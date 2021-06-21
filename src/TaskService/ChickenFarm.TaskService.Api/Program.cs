@@ -23,7 +23,7 @@ namespace ChickenFarm.TaskService.Api
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseSerilog()
+                // .UseSerilog()
                 // .UseSerilog((hostContext, loggerConfiguration) =>
                 // {
                 //     loggerConfiguration.ReadFrom.Configuration(hostContext.Configuration);
